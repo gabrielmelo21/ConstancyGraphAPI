@@ -23,10 +23,31 @@ public class GraphService {
     @Autowired
     private GraphRepository repository;
 
- //aqui é onde irei criar novos dados
-    //sempre que eu achar essa função no endpoint post
-    // irá adicionar aqueles novos 366 dados porem com o objetivo com
-    // o name diferente
+
+    /**
+     *   0. Oque precisamos fazer é gerar aquela grade de atividade diaria igual a do github
+     *    e cada quadrado representa um dia, em nosso json mockup temos uma lista com 366 itens, que representa
+     *    366 dias do ano, são pequenos quadrados, que possuem status true or false, true fica verde, false vermelho
+     *   1. Pegamos o file calendar_empty.json que é um mockup para geração de novos json
+     *   2. Usamos a lib jackson para manipular o json
+     *   3. O que difere essas grades chamadas por mim de Graphs, é o attr Objetivo String,
+     *   4. Toda vez que criamos uma nova grade/Graph, usamos o mockup de base e colocamos apenas o novo dado chamado Objetivo
+     *    que é enviado pelo usuario
+     *
+     *    {
+     *   "dataDia" : "01/01",
+     *   "status" : false,
+     *   "numeroDoDia" : 1,
+     *   "objetivo" : ""
+     * }, {
+     *   "dataDia" : "02/01",
+     *   "status" : false,
+     *   "numeroDoDia" : 2,
+     *   "objetivo" : ""
+     * } ...
+     *
+     *
+     */
 
     public ResponseEntity<String> newGraph(String objetivo) {
         try {
