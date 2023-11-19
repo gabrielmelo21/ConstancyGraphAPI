@@ -29,6 +29,15 @@ public class GraphController {
     public ResponseEntity<List<Graphs>> listByObjetivo(@PathVariable String objetivo) {
         return service.listByObjetivo(objetivo);
     }
+    @GetMapping("/uniqueObjetivos")
+    public ResponseEntity<List<String>> uniqueObjetivos(){
+        return service.listObjetivos();
+    }
+    @PutMapping("/{objetivo}")
+    public ResponseEntity<String> updateData(@PathVariable String objetivo){
+        return service.updateFrequency(objetivo);
+    }
+
 
     @DeleteMapping
     private ResponseEntity<String> delete(){

@@ -7,13 +7,16 @@ import constacygraph.api.models.Graphs;
 import constacygraph.api.repository.GraphRepository;
 import org.hibernate.graph.Graph;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,7 +96,10 @@ public class GraphService {
     }
 
     public ResponseEntity<List<Graphs>> listByObjetivo(String objetivo) {
-        List<Graphs> items = repository.findAllByObjetivo(objetivo);
+        List<Graphs> items = repository.findAllByObjetivo(objetivo, Sort.by(Sort.Order.asc("id")));
+
+
+
 
         if (!items.isEmpty()) {
             return new ResponseEntity<>(items, HttpStatus.OK);
@@ -108,4 +114,52 @@ public class GraphService {
         return new ResponseEntity<>("Todos dados apagados com sucesso.", HttpStatus.OK);
     }
 
- }
+
+    public ResponseEntity<List<String>> listObjetivos(){
+        List<Graphs> list =  repository.findAll();
+        List<String> uniqueObjectives = new ArrayList<>();
+
+        for (Graphs obj: list) {
+            String objetivo = obj.getObjetivo();
+
+            // Verifica se o objetivo já está na lista única
+            if (!uniqueObjectives.contains(objetivo)) {
+                // Adiciona o objetivo à lista única
+                uniqueObjectives.add(objetivo);
+            }
+        }
+
+        return new ResponseEntity<>(uniqueObjectives, HttpStatus.OK);
+
+
+
+    }
+
+
+
+
+    public ResponseEntity<String> updateFrequency(String objetivo) {
+        List<Graphs> graphs = repository.findAllByObjetivo(objetivo, Sort.by(Sort.Order.asc("id")));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM");
+        String currentDate = dateFormat.format(new Date());
+
+        for (Graphs graph : graphs) {
+            if (currentDate.equals(graph.getDataDia())) {
+                graph.setStatus(true);
+                repository.save(graph);
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Atualizado com sucesso");
+    }
+
+
+
+
+
+
+
+
+
+}
